@@ -29,9 +29,9 @@ def main():
     predictions = model.predict(xTest)
     mae = calculateMeanAbsoluteError(yTest, predictions)
     r2 = calculateR2(yTest, predictions)
-    
-    print(f"MAE: {mae:.2f}")
-    print(f"R^2: {r2:.2f}")
+
+    print(f"MAE: {mae:.2f}")  # Mean Absolute Error; average L1 loss
+    print(f"R^2: {r2:.2f}")  # R^2; the proportion of variance explained by the model
 
 
 def trainModel(evidence, labels):
