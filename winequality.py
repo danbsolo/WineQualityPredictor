@@ -1,17 +1,15 @@
 import csv
 import sys
 from sklearn.model_selection import train_test_split
-#from sklearn.neighbors import KNeighborsClassifier
-#from sklearn.linear_model import Perceptron
 from sklearn.linear_model import LinearRegression
 import numpy as np
 from sklearn.metrics import r2_score
+
 
 TEST_SPLIT_PROPORTION = 0.2
 
 
 def main():
-
     # Check command-line arguments
     if len(sys.argv) != 2:
         sys.exit("Usage: python winequality.py <<filepath>>")
@@ -31,22 +29,23 @@ def main():
     predictions = model.predict(xTest)
     mae = calculateMeanAbsoluteError(yTest, predictions)
     r2 = calculateR2(yTest, predictions)
-
+    
     print(f"MAE: {mae:.2f}")
     print(f"R^2: {r2:.2f}")
-
-
-def calculateMeanAbsoluteError(labels, predictions):
-    return np.mean(np.abs(np.array(labels) - np.array(predictions)))
-
-def calculateR2(labels, predictions):
-    return r2_score(labels, predictions)
 
 
 def trainModel(evidence, labels):
     model = LinearRegression()
     model.fit(evidence, labels)
     return model
+
+
+def calculateMeanAbsoluteError(labels, predictions):
+    return np.mean(np.abs(np.array(labels) - np.array(predictions)))
+
+
+def calculateR2(labels, predictions):
+    return r2_score(labels, predictions)
 
 
 def loadData(fileName):
