@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
 
-TEST_SPLIT_PROPORTION = 0.4
+TEST_SPLIT_PROPORTION = 0.3
 
 
 def main():
@@ -23,7 +23,10 @@ def main():
 
     # train model
     model = trainModel(xTrain, yTrain)
-    # predictions = model.predict(xTest)
+    predictions = model.predict(xTest)
+
+    print(f"Correct: {(yTest == predictions).sum()}")
+    print(f"Incorrect: {(yTest != predictions).sum()}")
 
 
 def trainModel(evidence, labels):
