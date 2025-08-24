@@ -1,7 +1,10 @@
 import csv
 import sys
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
+# from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import Perceptron
+
+# TODO: Do k-fold cross-validation, since this is a small dataset and we don't want to lose any data
 
 
 TEST_SPLIT_PROPORTION = 0.3
@@ -16,26 +19,38 @@ def main():
     # Parse data into evidence and labels
     evidence, labels = loadData(sys.argv[1])
 
-    # Split data into training set and testing set
+    # Split data into training set and testing set (i.e. holdout cross-validation)
     xTrain, xTest, yTrain, yTest = train_test_split(
         evidence, labels, test_size=TEST_SPLIT_PROPORTION
     )
 
     # train model
     model = trainModel(xTrain, yTrain)
-    predictions = model.predict(xTest)
     
-    # gather stats
-    correctCount = (yTest == predictions).sum()
-    incorrectCount = (yTest != predictions).sum()
-    totalCount = len(predictions)
+    # make predictions and evaluate accuracy
+    predictions = model.predict(xTest)
+    evaluate(yTest, predictions)
 
-    print(f"Accuracy: {(correctCount / totalCount * 100):.2f}%")
+    # # gather and display performance stats
+    # correctCount = (yTest == predictions).sum()
+    # #incorrectCount = (yTest != predictions).sum()
+    # totalCount = len(predictions)
+
+    # print(f"Accuracy: {(correctCount / totalCount * 100):.2f}%")
+
+
+def evaluate(labels, predictions):
+    totalLoss = 0
+
+    # Effectively use the L1 loss function
+    for lab, pred in zip(labels, predictions):
+        print(lab, pred)
+
 
 
 def trainModel(evidence, labels):
     # Change model here if necessary
-    model = KNeighborsClassifier(n_neighbors=1)
+    model = Perceptron()
     model.fit(evidence, labels)
     return model
 
@@ -66,9 +81,10 @@ def loadData(fileName):
                 float(row["alcohol"]),
             ])
 
-            # Quality is a score beween 0 and 10. We'll make it integer just because it can
+            # Quality is a score beween 0 and 10
+            # While it's discrete, we're treating it as continuous for better measuring loss
             labels.append(
-                int(row["quality"])
+                float(row["quality"])
             )
     
     return evidence, labels
