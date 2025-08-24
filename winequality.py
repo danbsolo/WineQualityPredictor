@@ -24,9 +24,13 @@ def main():
     # train model
     model = trainModel(xTrain, yTrain)
     predictions = model.predict(xTest)
+    
+    # gather stats
+    correctCount = (yTest == predictions).sum()
+    incorrectCount = (yTest != predictions).sum()
+    totalCount = len(predictions)
 
-    print(f"Correct: {(yTest == predictions).sum()}")
-    print(f"Incorrect: {(yTest != predictions).sum()}")
+    print(f"Accuracy: {(correctCount / totalCount * 100):.2f}%")
 
 
 def trainModel(evidence, labels):
